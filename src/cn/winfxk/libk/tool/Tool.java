@@ -1,11 +1,6 @@
-package com.winfxk.winfxklia.tool;
+package cn.winfxk.libk.tool;
 
-
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.util.Base64;
-import android.util.Log;
-import androidx.annotation.RequiresApi;
+import cn.winfxk.libk.log.Log;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -30,7 +25,6 @@ import java.util.regex.Pattern;
  * @author Winfxk
  */
 @SuppressWarnings("unused")
-@SuppressLint({"CustomX509TrustManager", "TrustAllX509TrustManager"})
 public class Tool implements X509TrustManager, HostnameVerifier {
     private static final String colorKeyString = "123456789abcdef";
     private static final String randString = "-+abcdefghijklmnopqrstuvwxyz_";
@@ -48,23 +42,6 @@ public class Tool implements X509TrustManager, HostnameVerifier {
     private static final String Tag = "Tool";
     private static final Pattern NumPattern = Pattern.compile("[0-9.]*");
 
-    /**
-     * 读取一个文件并且序列化为Base64字符串
-     *
-     * @param file 要序列化的文件
-     * @return 序列化后的内容
-     * @throws IOException 可能得异常
-     */
-    public static String readFileToBase64String(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = fis.read(buffer)) != -1)
-                baos.write(buffer, 0, bytesRead);
-            return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        }
-    }
 
     /**
      * @param fileName 需要判断的文件名
@@ -177,7 +154,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
             Thread.sleep(time);
             return true;
         } catch (Exception e) {
-            Log.e(Tag, "使用Sleep时出现异常", e);
+            Log.Companion.e(Tag, "使用Sleep时出现异常", e);
             return false;
         }
     }
@@ -191,7 +168,10 @@ public class Tool implements X509TrustManager, HostnameVerifier {
      * @return 适合的值
      */
     public static int getMath(int max, int min, int live) {
-        return Math.min(min, Math.max(max, live));
+        if (live < max && min < live) return live;
+        if (live > max) return max;
+        if (live < min) return min;
+        return live;
     }
 
     /**
@@ -207,7 +187,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         if (list != null) try {
             return list.toArray(v);
         } catch (Exception e) {
-            Log.e(Tag, "将List转换为数组时出现异常！", e);
+            Log.Companion.e(Tag, "将List转换为数组时出现异常！", e);
         }
         return v;
     }
@@ -233,20 +213,6 @@ public class Tool implements X509TrustManager, HostnameVerifier {
             Size /= 1024;
         }
         return Tool.Double2(Size) + FileSizeUnit[Math.min(index, FileSizeUnit.length - 1)];
-    }
-
-    /**
-     * 读取包内文件
-     */
-    public static InputStream getResourceStream(String FileName) {
-        return Tool.class.getResourceAsStream("/res/" + FileName);
-    }
-
-    /**
-     * 读取包内文本
-     */
-    public static String getResource(String FileName) throws IOException {
-        return Utils.readFile(Tool.class.getResourceAsStream("/res/" + FileName));
     }
 
     /**
@@ -368,7 +334,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         try {
             return objToBigDecimal(object, new BigDecimal(i)).intValue();
         } catch (Exception e) {
-            Log.d(Tag, "尝试吧一个未知值转换为整数时出现异常！", e);
+            Log.Companion.d(Tag, "尝试吧一个未知值转换为整数时出现异常！", e);
             return i;
         }
     }
@@ -387,7 +353,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         try {
             return objToBigDecimal(obj, new BigDecimal(d)).longValue();
         } catch (Exception e) {
-            Log.d(Tag, "尝试吧一个未知值转换为Long时出现异常！", e);
+            Log.Companion.d(Tag, "尝试吧一个未知值转换为Long时出现异常！", e);
             return d;
         }
     }
@@ -406,7 +372,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         try {
             return objToBigDecimal(obj, new BigDecimal(d)).floatValue();
         } catch (Exception e) {
-            Log.d(Tag, "尝试吧一个未知值转换为Float时出现异常！", e);
+            Log.Companion.d(Tag, "尝试吧一个未知值转换为Float时出现异常！", e);
             return d;
         }
     }
@@ -425,7 +391,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         try {
             return objToBigDecimal(obj, new BigDecimal(d)).doubleValue();
         } catch (Exception e) {
-            Log.d(Tag, "尝试吧一个未知值转换为Double时出现异常！", e);
+            Log.Companion.d(Tag, "尝试吧一个未知值转换为Double时出现异常！", e);
             return d;
         }
     }
@@ -453,7 +419,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         try {
             return new BigDecimal(string);
         } catch (Exception e) {
-            Log.e(Tag, "尝试将未知数值转换为BigDecimal时出现异常！", e);
+            Log.Companion.e(Tag, "尝试将未知数值转换为BigDecimal时出现异常！", e);
         }
         return d;
     }
@@ -604,7 +570,8 @@ public class Tool implements X509TrustManager, HostnameVerifier {
     public static void Copy(File file1, File file2) throws Exception {
         if (!file1.exists()) return;
         File Parent = file2.getParentFile();
-        if (Parent != null && !Parent.exists()) if (!Parent.mkdirs()) Log.e(Tag, "复制文件时创建文件所在路径失败！");
+        if (Parent != null && !Parent.exists())
+            if (!Parent.mkdirs()) Log.Companion.e(Tag, "复制文件时创建文件所在路径失败！");
         InputStream fileInputStream = new FileInputStream(file1);
         OutputStream fileOutputStream = new FileOutputStream(file2, true);
         int temp;
@@ -1016,7 +983,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         InputStream inputStream = conn.getInputStream();
         byte[] getData = readInputStream(inputStream);
         File saveDir = new File(savePath);
-        if (!saveDir.exists()) if (!saveDir.mkdir()) Log.e(Tag, "下载文件时创建文件所在路径失败！");
+        if (!saveDir.exists()) if (!saveDir.mkdir()) Log.Companion.e(Tag, "下载文件时创建文件所在路径失败！");
         File file = new File(saveDir + File.separator + fileName);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);
@@ -1156,7 +1123,7 @@ public class Tool implements X509TrustManager, HostnameVerifier {
         InputStream inputStream = conn.getInputStream();
         byte[] getData = readInputStream(inputStream);
         File saveDir = new File(savePath);
-        if (!saveDir.exists()) if (!saveDir.mkdirs()) Log.e(Tag, "使用HTTPS下载文件时创建文件所在路径失败！");
+        if (!saveDir.exists()) if (!saveDir.mkdirs()) Log.Companion.e(Tag, "使用HTTPS下载文件时创建文件所在路径失败！");
         FileOutputStream fos = new FileOutputStream(new File(saveDir, fileName));
         fos.write(getData);
         fos.close();
@@ -1203,7 +1170,6 @@ public class Tool implements X509TrustManager, HostnameVerifier {
     /**
      * 将Map按数据升序排列
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueAscending(Map<K, V> map) {
         List<Entry<K, V>> list = new LinkedList<>(map.entrySet());
         list.sort(Entry.comparingByValue());
@@ -1216,7 +1182,6 @@ public class Tool implements X509TrustManager, HostnameVerifier {
     /**
      * 将Map降序排序
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueDescending(Map<K, V> map) {
         List<Entry<K, V>> list = new LinkedList<>(map.entrySet());
         list.sort((a, b) -> -(a.getValue().compareTo(b.getValue())));

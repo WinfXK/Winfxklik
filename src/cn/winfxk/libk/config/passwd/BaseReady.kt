@@ -15,5 +15,21 @@
 * Created Date: 2024/11/20  09:23 */
 package cn.winfxk.libk.config.passwd
 
-class BaseReady {
+import cn.winfxk.libk.config.Type
+import cn.winfxk.libk.tool.utils.readString
+import java.io.File
+
+abstract class BaseReady(val file: File, val type: Type, val passwd: Int) {
+    /**
+     * 获取的文本内容
+     */
+    open fun getContext(): String? = if (! file.exists() || ! file.isFile) null else file.readString()
+    /**
+     * 获取的序列化内容
+     */
+    abstract fun read(): MutableMap<String, Any?>;
+    abstract fun getString(map: MutableMap<String, Any?>): String;
+    override fun toString(): String {
+        return this.javaClass.simpleName
+    }
 }

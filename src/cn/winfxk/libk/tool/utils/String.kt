@@ -15,5 +15,29 @@
 * Created Date: 2024/11/19  17:21 */
 package cn.winfxk.libk.tool.utils
 
-class String {
+import com.alibaba.fastjson2.JSONArray
+import com.alibaba.fastjson2.JSONObject
+
+/**
+ * 将字符串序列化为JsonObject
+ */
+fun String?.toJson(): JSONObject {
+    if (this == null) return JSONObject();
+    return JSONObject.parseObject(this);
 }
+/**
+ * 将字符串反序列化为JsonArray
+ */
+fun String?.toArray(): JSONArray {
+    if (this == null) return JSONArray();
+    return JSONArray.parseArray(this);
+}
+/**
+ * 将Map序列化为JsonString
+ */
+fun MutableMap<String, Any?>?.toJsonString(): String = if (this == null) JSONObject().toJSONString() else JSONObject.toJSONString(this);
+
+/**
+ * 将List序列化为JsonString
+ */
+fun List<Any?>?.toJsonString(): String = if (this == null) JSONArray().toJSONString() else JSONArray.toJSONString(this);

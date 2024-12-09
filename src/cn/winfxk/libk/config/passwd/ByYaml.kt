@@ -16,12 +16,15 @@
 package cn.winfxk.libk.config.passwd
 
 import cn.winfxk.libk.config.Type
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.Yaml
 import java.io.File
 
-class ByText(file: File, type: Type, passwd: Int) : BaseReady(file, type, passwd) {
-    override fun getContext(): String {
-    }
+class ByYaml(file: File, type: Type, passwd: Int) : BaseReady(file, type, passwd) {
+    override fun read(): MutableMap<String, Any?> = getContext().let { if (it.isNullOrBlank()) HashMap<String, Any?>() else yaml.loadAs(it, MutableMap::class.java) }
+    override fun getString(map: MutableMap<String, Any?>): String = yaml.dump(map);
 
-    override fun read(): MutableMap<String, Any?> {
+    companion object {
+        private val yaml: Yaml = Yaml(DumperOptions().also { it.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK) });
     }
 }

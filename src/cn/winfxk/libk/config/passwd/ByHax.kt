@@ -16,12 +16,29 @@
 package cn.winfxk.libk.config.passwd
 
 import cn.winfxk.libk.config.Type
+import cn.winfxk.libk.tool.Tool
 import java.io.File
 
-class ByText(file: File, type: Type, passwd: Int) : BaseReady(file, type, passwd) {
-    override fun getContext(): String {
+class ByHax(file: File, type: Type, passwd: Int) : ByInt(file, type, passwd) {
+    override fun passwdString(string: String): String {
+        val buffer = StringBuilder();
+        for (char in string.toCharArray())
+            buffer.append(Tool.CompressNumber(getPasswd(char, passwd).toLong())).append(getSpils())
+        return buffer.toString();
     }
 
-    override fun read(): MutableMap<String, Any?> {
+    override fun getContext(string: String): String {
+        val buffer = StringBuilder();
+        val array = string.split(getSpils());
+        for (s in array) if (s.isNotBlank()) buffer.append(getString(Tool.UnCompressNumber(s).toInt(), passwd))
+        return buffer.toString();
+    }
+
+    override fun getSpils(): String {
+        return spils
+    }
+
+    companion object {
+        private const val spils = ".";
     }
 }

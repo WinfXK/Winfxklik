@@ -15,5 +15,64 @@
 * Created Date: 2024/11/20  08:05 */
 package cn.winfxk.libk.tool.utils
 
-class Stream {
+import cn.winfxk.libk.log.Log
+import java.awt.Font
+import java.awt.image.BufferedImage
+import java.io.InputStream
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Paths
+import javax.imageio.ImageIO
+import javax.swing.JOptionPane
+
+/**
+ * 从流加载字体
+ */
+fun InputStream.readFont(): Font {
+    return this.use { Font.createFont(Font.TRUETYPE_FONT, this) };
+}
+/**
+ * 从流中读取文本
+ * @param charset 字符编码
+ * @param 缓冲区大小
+ */
+fun InputStream.readString(charset: Charset = Charsets.UTF_8, cacheSize: Int = 1024): String {
+    val buffer = StringBuilder();
+    val bytes = ByteArray(cacheSize);
+    var length = 0;
+    while (this.read(bytes).also { length = it } != - 1)
+        buffer.append(String(bytes, 0, length))
+    return buffer.toString();
+}
+/**
+ * 从Jar包中读取资源
+ */
+fun Any.getStreamByJar(name: String): InputStream? {
+    if (name.isBlank()) return null;
+    val path = "resources/$name";
+    var inputStream: InputStream?;
+    inputStream = this.javaClass.getResourceAsStream("/$path");
+    if (inputStream == null) {
+        Log.w("StreamUtils", "getStreamByJar: 无法从主资源路径获取资源${name}，正在切换..")
+        inputStream = this.javaClass.getResourceAsStream("/$name");
+    }
+    if (inputStream == null) {
+        Log.w("StreamUtils", "getStreamByJar: 无法从辅资源路径获取资源${name}，正在切换文件系统.")
+        inputStream = Files.newInputStream(Paths.get(path));
+    }
+    if (inputStream == null) Log.w("StreamUtils", "getStreamByJar: 无法读取资源${name}，请检查是否存在.")
+    return inputStream;
+}
+/**
+ *从jar包读取图像资源
+ */
+fun Any.getImageByjar(name: String): BufferedImage? {
+    return this.getStreamByJar(name)?.use { ImageIO.read(it) };
+}
+/**
+ * 抛出一个异常
+ */
+fun <V> throwException(message: String): V {
+    JOptionPane.showMessageDialog(null, message)
+    throw IllegalStateException(message);
 }

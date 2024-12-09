@@ -1,11 +1,11 @@
 /*Created by IntelliJ IDEA.
   User: kc4064 
   Date: 2024/6/22  上午8:26*/
-package com.winfxk.winfxklia.tool.field;
+package cn.winfxk.libk.tool.utils.field;
 
 
-import android.util.Log;
-import com.winfxk.winfxklia.tool.able.Tabable;
+import cn.winfxk.libk.log.Log;
+import cn.winfxk.libk.tool.tab.Tabable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public interface Fields extends Tabable {
                 if (fieldValue instanceof Fields) fieldValue = ((Fields) fieldValue).getAllFields(hash);
                 map.put(fieldName, fieldValue);
             } catch (IllegalAccessException e) {
-                Log.w(getTAG(), "获取" + getClass().getSimpleName() + "属性数据时出现异常！", e);
+                Log.Companion.w(getTAG(), "获取" + getClass().getSimpleName() + "属性数据时出现异常！", e);
             }
         return map;
     }

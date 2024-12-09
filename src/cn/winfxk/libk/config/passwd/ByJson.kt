@@ -16,12 +16,11 @@
 package cn.winfxk.libk.config.passwd
 
 import cn.winfxk.libk.config.Type
+import cn.winfxk.libk.tool.utils.toJson
+import cn.winfxk.libk.tool.utils.toJsonString
 import java.io.File
 
-class ByText(file: File, type: Type, passwd: Int) : BaseReady(file, type, passwd) {
-    override fun getContext(): String {
-    }
-
-    override fun read(): MutableMap<String, Any?> {
-    }
+open class ByJson(file: File, type: Type, passwd: Int) : BaseReady(file, type, passwd) {
+    override fun read(): MutableMap<String, Any?> = getContext().toJson();
+    override fun getString(map: MutableMap<String, Any?>): String = map.toJsonString();
 }

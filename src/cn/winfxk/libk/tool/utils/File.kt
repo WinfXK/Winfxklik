@@ -12,8 +12,37 @@
 * Author： Winfxk
 * Created PCUser: kc4064 
 * Web: http://winfxk.com
-* Created Date: 2024/11/19  17:17 */
+* Created Date: 2024/11/19  16:10 */
 package cn.winfxk.libk.tool.utils
 
-class File {
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.nio.charset.Charset
+
+/**
+ * 从一个输入流写入数据到文件
+ */
+fun File.write(input: InputStream, cacheSize: Int = 1024) {
+    input.use { i ->
+        FileOutputStream(this).use { out ->
+            var length: Int;
+            val buffer = ByteArray(cacheSize);
+            while (i.read(buffer).also { length = it } != - 1)
+                out.write(buffer, 0, length)
+        }
+    }
 }
+/**
+ * 将字符串保存到文件
+ * @param string 需要保存的字符串
+ * @param charset 字符串编码
+ */
+fun File.write(string: String, charset: Charset = Charsets.UTF_8) = write(string.byteInputStream(charset))
+/**
+ * 从文件中读取文本
+ * @param charset 字符编码
+ * @param 缓冲区大小
+ */
+fun File.readString(charset: Charset = Charsets.UTF_8, cacheSize: Int = 1024): String = FileInputStream(this).readString(charset, cacheSize);

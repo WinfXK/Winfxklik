@@ -1,11 +1,9 @@
 /*Created by IntelliJ IDEA.
   User: kc4064 
   Date: 2024/6/17  下午1:25*/
-package com.winfxk.winfxklia.tool.utils
+package cn.winfxk.libk.tool
 
-import cn.winfxk.libk.tool.utils.MyList
 import com.alibaba.fastjson2.JSONObject
-import com.winfxk.winfxklia.tool.Tool
 import java.math.BigDecimal
 
 @Suppress("unused")

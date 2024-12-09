@@ -15,5 +15,6 @@
 * Created Date: 2024/11/19  16:14 */
 package cn.winfxk.libk.log
 
-enum class Type {
+enum class Type(val color: String, val title: String) {
+    Debug("\u001b[0m","d"), Info("\u001b[0m","i"), Warning("\u001b[33;1m","w"), Error("\u001b[31;1m","e")
 }

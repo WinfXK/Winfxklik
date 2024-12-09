@@ -15,6 +15,6 @@
 * Created Date: 2024/11/19  16:13 */
 package cn.winfxk.libk.log
 
-internal class LogListener {
-    fun Log
+interface OnLogListener {
+    fun logListener(type: Type, tag: String?, message: Any?, throwable: Throwable?, title: String, context: String);
 }

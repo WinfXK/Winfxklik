@@ -15,5 +15,21 @@
 * Created Date: 2024/11/20  09:24 */
 package cn.winfxk.libk.config.passwd
 
-class ByText {
+import cn.winfxk.libk.config.Type
+import java.io.File
+
+class ByText(file: File, type: Type, passwd: Int) : ByInt(file, type, passwd) {
+    override fun passwdString(string: String): String {
+        val buffer = StringBuilder();
+        for (char in string.toCharArray())
+            buffer.append(getPasswd(char, passwd).toChar().toString())
+        return buffer.toString();
+    }
+
+    override fun getContext(string: String): String {
+        val buffer = StringBuilder();
+        val array = string.toCharArray();
+        for (s in array) buffer.append(getString(s.code, passwd))
+        return buffer.toString();
+    }
 }

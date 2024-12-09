@@ -1,12 +1,10 @@
 /*Created by IntelliJ IDEA.
   User: kc4064 
   Date: 2024/7/17  上午8:43*/
-package cn.winfxk.libk.tool.utils
+package cn.winfxk.libk.tool
 
-import cn.winfxk.libk.tool.Tool
 import com.alibaba.fastjson2.JSON
 import com.alibaba.fastjson2.JSONArray
-import com.winfxk.winfxklia.tool.utils.MyMap
 import java.math.BigDecimal
 
 @Suppress("unused")
