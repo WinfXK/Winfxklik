@@ -73,6 +73,7 @@ class Log(val tag: String) {
 
     companion object {
         private val listeners = ArrayList<OnLogListener>();
+        private val emptyList = ArrayList<OnLogListener>();
         private const val defaultColor = "\u001b[0m";
         private val colors = arrayOf(defaultColor, Type.Info.color, Type.Debug.color, Type.Error.color, Type.Warning.color)
         private val title = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -113,7 +114,7 @@ class Log(val tag: String) {
             else onLog(Type.Error, tag, message, throwable);
         }
 
-        private fun onLog(type: Type, tag: String?, message: Any?, throwable: Throwable?) = onLog(type, tag, message, throwable, listeners)
+        private fun onLog(type: Type, tag: String?, message: Any?, throwable: Throwable?) = onLog(type, tag, message, throwable, emptyList)
 
         private fun onLog(type: Type, tag: String?, message: Any?, throwable: Throwable?, listeners: ArrayList<OnLogListener>) {
             val error = throwable?.let {
@@ -126,6 +127,7 @@ class Log(val tag: String) {
             val log = "$defaultColor$title${if (tag.isNullOrBlank()) "" else "[$tag]"}${type.title}: ${type.color}${msg.let { if (it.isBlank()) "" else "$it${if (error.isBlank()) "" else "\n"}" }}$error$defaultColor";
             println(log)
             listeners.forEach { it.logListener(type, tag, message, throwable, title, log) }
+            Log.listeners.forEach { it.logListener(type, tag, message, throwable, title, log) }
         }
         /**
          * 获取日志打印的时间头
