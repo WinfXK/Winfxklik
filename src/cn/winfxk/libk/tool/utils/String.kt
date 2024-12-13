@@ -17,7 +17,10 @@ package cn.winfxk.libk.tool.utils
 
 import com.alibaba.fastjson2.JSONArray
 import com.alibaba.fastjson2.JSONObject
+import com.alibaba.fastjson2.JSONWriter
 
+private val emptyJsonObject = JSONObject();
+private val emptyJsonArray = JSONArray();
 /**
  * 将字符串序列化为JsonObject
  */
@@ -35,9 +38,9 @@ fun String?.toArray(): JSONArray {
 /**
  * 将Map序列化为JsonString
  */
-fun MutableMap<String, Any?>?.toJsonString(): String = if (this == null) JSONObject().toJSONString() else JSONObject.toJSONString(this);
+@JvmOverloads fun MutableMap<String, Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonObject.toJSONString(pretty) else JSONObject.toJSONString(this, pretty);
 
 /**
  * 将List序列化为JsonString
  */
-fun List<Any?>?.toJsonString(): String = if (this == null) JSONArray().toJSONString() else JSONArray.toJSONString(this);
+@JvmOverloads fun List<Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonArray.toJSONString(pretty) else JSONArray.toJSONString(this,pretty);

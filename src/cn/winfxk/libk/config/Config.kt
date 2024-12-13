@@ -18,6 +18,7 @@ package cn.winfxk.libk.config
 import cn.winfxk.libk.config.passwd.*
 import cn.winfxk.libk.log.Log
 import cn.winfxk.libk.tool.utils.*
+import com.alibaba.fastjson2.JSONWriter
 import java.io.File
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
@@ -71,37 +72,25 @@ class Config(val file: File, val type: Type = Type.Json, val defaultConfig: Muta
      * 清空配置文件数据
      * @return 配置文件
      */
-    fun clear(): Config {
-        data.clear();
-        return this;
-    }
+    fun clear() = this.also { it.data.clear() }
     /**
      * 批量填充数据
      * @param map 需要填充的数据
      * @return 配置文件
      */
-    fun setAll(map: Map<String, Any?>): Config {
-        data.putAll(map);
-        return this;
-    }
+    fun setAll(map: Map<String, Any?>) = this.also { it.data.putAll(map); }
     /**
      * 返回全部数据
      */
-    fun getAll(): HashMap<String, Any?> {
-        return HashMap(data);
-    }
+    fun getAll() = HashMap(data);
     /**
      * 返回全部Value
      */
-    fun getValues(): ArrayList<Any?> {
-        return ArrayList(data.values);
-    }
+    fun getValues() = ArrayList(data.values);
     /**
      * 返回全部Key
      */
-    fun getKeys(): HashSet<String> {
-        return HashSet(data.keys)
-    }
+    fun getKeys() = HashSet(data.keys);
     /**
      * 根据值返回对应的Key
      * @param value 可能的值
@@ -199,8 +188,7 @@ class Config(val file: File, val type: Type = Type.Json, val defaultConfig: Muta
      * @return 数据
      */
     fun getStringMap(key: String, default: Map<String, String?>? = HashMap()): Map<String, String?>? {
-        val any = getMap(key, default);
-        if (any == null) return default;
+        val any = getMap(key, default) ?: return default;
         val map = HashMap<String, String?>();
         for ((k, v) in any) map[k] = v.objToString(null);
         return map;
@@ -223,9 +211,8 @@ class Config(val file: File, val type: Type = Type.Json, val defaultConfig: Muta
      * @param default 默认值
      * @return 数据
      */
-    fun getStringList(key: String, default: List<String?>? = ArrayList<String?>()): List<String?>? {
-        val any = getList(key, default);
-        if (any == null) return default;
+    fun getStringList(key: String, default: List<String?>? = ArrayList()): List<String?>? {
+        val any = getList(key, default) ?: return default;
         val list = ArrayList<String?>();
         for (item in any) list.add(item.objToString(null));
         return list;
@@ -236,10 +223,7 @@ class Config(val file: File, val type: Type = Type.Json, val defaultConfig: Muta
      * @param value 数据
      * @return 配置文件
      */
-    fun set(key: String, value: Any?): Config {
-        data[key] = value;
-        return this;
-    }
+    fun set(key: String, value: Any?) = this.also { it.data[key] = value }
     /**
      * 根据Key删除某个值
      */
