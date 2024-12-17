@@ -35,6 +35,16 @@ fun File.write(input: InputStream, cacheSize: Int = 1024) {
     }
 }
 /**
+ * 删除一个文件夹或者文件
+ * <b>此操作将地柜删除</b>
+ */
+fun File.deletes(): Boolean {
+    if (this.isFile) return this.delete();
+    var isSuccess = true;
+    this.listFiles()?.forEach { isSuccess = it.deletes(); }
+    return this.delete() && isSuccess;
+}
+/**
  * 将字符串保存到文件
  * @param string 需要保存的字符串
  * @param charset 字符串编码
