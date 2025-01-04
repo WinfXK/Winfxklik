@@ -101,3 +101,14 @@ fun Any?.objToString(default: String? = null): String? {
     if (this == null) return default;
     return this.toString();
 }
+/**
+ * 将传入的RGB值转换为16进制颜色符
+ */
+fun rgbToHex(r: Int, g: Int, b: Int): Int {
+    require(r in 0 .. 255 && g in 0 .. 255 && b in 0 .. 255) { "RGB values must be in the range 0 to 255" }
+    return (r shl 16) or (g shl 8) or b
+}
+/**
+ * 将16进制颜色符转换为RGB
+ */
+fun hexToRGB(hex: Int) = Triple((hex shr 16) and 0xFF, (hex shr 8) and 0xFF, hex and 0xFF);

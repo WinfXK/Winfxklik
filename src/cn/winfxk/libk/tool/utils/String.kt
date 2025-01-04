@@ -26,21 +26,23 @@ private val emptyJsonArray = JSONArray();
  */
 fun String?.toJson(): JSONObject {
     if (this == null) return JSONObject();
-    return JSONObject.parseObject(this);
+    return JSONObject.parseObject(this) ?: JSONObject();
 }
 /**
  * 将字符串反序列化为JsonArray
  */
 fun String?.toArray(): JSONArray {
     if (this == null) return JSONArray();
-    return JSONArray.parseArray(this);
+    return JSONArray.parseArray(this) ?: JSONArray();
 }
 /**
  * 将Map序列化为JsonString
  */
-@JvmOverloads fun MutableMap<String, Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonObject.toJSONString(pretty) else JSONObject.toJSONString(this, pretty);
+@JvmOverloads
+fun MutableMap<String, Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonObject.toJSONString(pretty) else JSONObject.toJSONString(this, pretty);
 
 /**
  * 将List序列化为JsonString
  */
-@JvmOverloads fun List<Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonArray.toJSONString(pretty) else JSONArray.toJSONString(this,pretty);
+@JvmOverloads
+fun List<Any?>?.toJsonString(pretty: JSONWriter.Feature = JSONWriter.Feature.PrettyFormat): String = if (this == null) emptyJsonArray.toJSONString(pretty) else JSONArray.toJSONString(this, pretty);
