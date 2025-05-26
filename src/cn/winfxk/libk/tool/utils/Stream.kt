@@ -34,15 +34,9 @@ fun InputStream.readFont(): Font {
 /**
  * 从流中读取文本
  * @param charset 字符编码
- * @param 缓冲区大小
  */
-fun InputStream.readString(charset: Charset = Charsets.UTF_8, cacheSize: Int = 1024): String {
-    val buffer = StringBuilder();
-    val bytes = ByteArray(cacheSize);
-    var length = 0;
-    while (this.read(bytes).also { length = it } != - 1)
-        buffer.append(String(bytes, 0, length))
-    return buffer.toString();
+fun InputStream.readString(charset: Charset = Charsets.UTF_8): String {
+    return this.bufferedReader(charset).use { it.readText() }
 }
 /**
  * 从Jar包中读取资源

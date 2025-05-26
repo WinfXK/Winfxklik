@@ -55,4 +55,4 @@ fun File.write(string: String, charset: Charset = Charsets.UTF_8) = write(string
  * @param charset 字符编码
  * @param 缓冲区大小
  */
-fun File.readString(charset: Charset = Charsets.UTF_8, cacheSize: Int = 1024): String = FileInputStream(this).readString(charset, cacheSize);
+fun File.readString(charset: Charset = Charsets.UTF_8): String = FileInputStream(this).readString(charset);

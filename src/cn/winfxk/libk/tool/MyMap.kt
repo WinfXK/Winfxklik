@@ -7,7 +7,7 @@ import com.alibaba.fastjson2.JSONObject
 import java.math.BigDecimal
 
 @Suppress("unused")
-class MyMap<T, V>() : LinkedHashMap<T, V>() {
+class MyMap<T, V>() : LinkedHashMap<T, V>(), Cloneable {
     constructor(key: T, value: V) : this() {
         this[key] = value
     }
@@ -100,6 +100,10 @@ class MyMap<T, V>() : LinkedHashMap<T, V>() {
     fun addAll(map: Map<T, V>): MyMap<T, V> {
         this.putAll(map)
         return this
+    }
+
+    public override fun clone(): MyMap<T, V> {
+        return super<LinkedHashMap>.clone() as MyMap<T, V>
     }
 
     companion object {
